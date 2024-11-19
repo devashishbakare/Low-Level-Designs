@@ -1,0 +1,32 @@
+Used 2 Design Pattern
+
+1) Singleton design pattern
+Created a logger for all the transaction
+2) Strategy design pattern
+There are 2 strategy to follow, clearly mention in problem statement
+
+Used 1 Design Principle
+Single Responsibility Principle(SRP):
+
+How It Relates to Design Patterns
+When we design systems like the parking lot example, adhering to SRP ensures that:
+Each class or function is responsible for one specific task.
+Separation of concerns is maintained, making the code easier to understand, extend, and test.
+For instance:
+ParkingManager handles assigning parking spots.
+VehicleRegistry maintains the mapping of vehicles and their parking spots.
+SearchService provides search functionality.
+FreeSpotCounter handles counting free spots.
+Each of these components has a single responsibility, reducing coupling and making the system flexible and modular.
+
+Removing Map Element by value
+
+ticketToSpotMapper.values().remove(spotId);
+vehicleNumberToSpotMapper.values().remove(spotId);
+
+Creating class for convenience to remove the complexity of it
+Parking Details : To Hold the parking details
+Parking Block : To hold the parking block details like
+- is block of [row][col] is free of not,
+- what kind of vehicle we can park there,
+- if park there that parking details
