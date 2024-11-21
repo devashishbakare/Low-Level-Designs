@@ -1,0 +1,22 @@
+Here we have used the chain of responsibility design pattern
+
+why we use the COR pattern here?
+There are different ways in which you can book ticket
+leve1: do the seats booking first with continuous seats, low to high
+
+If continuous seats are not available then pick seats from lowest row, column as mention in problem statement
+level 2 : do the seat allocation as per above
+There might be many condition which can comes in future, so if we use the COR pattern here we can open to extend
+
+You can create a one central logger function, its not mention in problem statement but you can do that as well
+
+Important to keep in mind
+1) One function should have only one logic, Single Responsibility Principle (SRP):
+2) Open/Closed Principle (OCP): we used COR above
+
+3) Separation of Concerns
+Different functionalities are neatly separated:
+Cinema and Screen handle structure.
+Show handles booking logic.
+Ticket handles user-specific booking details.
+

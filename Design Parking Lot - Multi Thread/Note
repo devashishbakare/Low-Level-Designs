@@ -1,0 +1,39 @@
+In multi threaded environment we have to do the same just keep below things in mind
+
+1) We use the same data structure but for multi-threading we use different variation of it
+    a) map variation
+    Single-Threaded : Map<String, String> map;
+    Multi-Threaded :  ConcurrentHashMap<String, String> vehicleToSpotMap;
+    found in package : import java.util.concurrent.ConcurrentHashMap;
+    B) int[] variation
+    single-Threaded : int[] Array;
+    multi-Threaded : AtomicInteger[][] Array
+
+2) Use Final for members :
+    a) Declaring a variable as final ensures the reference to the object cannot be reassigned to another object.
+    b) Using final makes the code more predictable and readable by making it clear that these objects are meant to be shared and never reassigned
+    Eg:
+    private final String[][][] parking;
+    private final ConcurrentHashMap<String, String> vehicleToSpotMap; // vehicleNumber -> spotId
+    private final ConcurrentHashMap<String, String> ticketToSpotMap; // ticketId -> spotId
+    private final ConcurrentHashMap<String, ParkingResult> parkingHistory; // spotId -> ParkingResult
+    private final AtomicInteger[][] freeSpots2Wheeler; // Tracks free spots per floor for 2-wheelers
+    private final AtomicInteger[][] freeSpots4Wheeler; // Tracks free spots per floor for 4-wheelers
+    private final Object lock = new Object();
+
+3) Multiple threaded are working you need to allow only one thread to update
+    a) create private final Object lock = new Object();
+    b) wrap your code with
+        synchronized(lock){
+        //you logic here
+        }
+
+4) Using of thread in main
+    a) create thread pool
+    ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+    b) call with submit and lambda function
+    executorService.submit(() -> {
+        ParkingResult result = parkingLot.park(4, "BH123", "TKT123");
+        System.out.println("Park Result: " + result.status + ", Spot: " + result.spotId);
+    });
