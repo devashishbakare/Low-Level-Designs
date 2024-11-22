@@ -1,0 +1,10 @@
+Here we are using Flyweight Design Pattern
+
+- Why we used Flyweight Pattern?
+In problem statement we could see "any number of rows and any number of columns. Each character in the document has its own style"
+Keeping Style for each character, as character may be any number of lines, and style itself limited here so why to keep new style object for each character
+
+Here we can use same style object multiple time, hence we are caching like below
+and in style we are keeping the styles as per need
+important to note : caching, caching, caching, caching, caching, caching.......
+private Map<Character, Style> charWithStyleMapper;
