@@ -1,0 +1,7 @@
+Here we have use the state design pattern,
+we could see each time if have done any operation then there are changing in state
+1) ideal
+2) up
+3) down
+
+//Look for edge cases, there are a lot of them
