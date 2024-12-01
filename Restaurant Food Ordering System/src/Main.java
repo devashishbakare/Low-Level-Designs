@@ -1,8 +1,7 @@
-import java.util.*;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
-
-
         FoodOrderingSystem foodOrderingSystem = new FoodOrderingSystem();
 
         foodOrderingSystem.orderFood("order-0", "restaurant-0", "food-1");
@@ -35,7 +34,6 @@ public class Main {
         foodOrderingSystem.orderFood("order-9", "restaurant-1", "food-0");
         foodOrderingSystem.rateOrder("order-9", 4);
 
-        System.out.println(Order.restaurantIdToRestaurantMapper.size());
 
         List<String> store = foodOrderingSystem.getTopRestaurantsByFood("food-0");
         for(String str : store) System.out.print(str + " , ");
@@ -47,5 +45,6 @@ public class Main {
 
         List<String> store2 = foodOrderingSystem.getTopRatedRestaurants();
         for(String str : store2) System.out.print(str + " , ");
+
     }
 }

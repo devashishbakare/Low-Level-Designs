@@ -4,14 +4,15 @@ public class Restaurant implements RestaurantObserver{
     public static int totalRating;
     public static int noOfRatingCount;
     public static double rating;
-    public Set<Integer> availableFood;
+    public Set<String> availableFood;
 
     public Restaurant(String restaurantId) {
         this.restaurantId = restaurantId;
         noOfRatingCount = 0;
+        availableFood = new HashSet<>();
     }
 
-    public void setAvailableFood(int foodId){
+    public void setAvailableFood(String foodId){
         availableFood.add(foodId);
     }
 
@@ -25,7 +26,7 @@ public class Restaurant implements RestaurantObserver{
     public void calculateRating(){
         rating = (double)totalRating/noOfRatingCount;
         rating = (double)((int)((rating+0.05)*10))/10.0;
-        System.out.println("Restaurant Rating: "  + rating);
+        //System.out.println("Restaurant Rating: "  + rating);
     }
 
     @Override

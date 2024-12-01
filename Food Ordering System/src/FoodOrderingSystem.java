@@ -2,7 +2,7 @@ import java.util.*;
 
 public class FoodOrderingSystem {
 
-    public Map<String, Order> orderIdToOrderMapper;
+    public static Map<String, Order> orderIdToOrderMapper;
     public FoodOrderingSystem(){
         orderIdToOrderMapper = new HashMap<>();
     }

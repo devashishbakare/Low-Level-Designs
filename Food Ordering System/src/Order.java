@@ -20,6 +20,7 @@ public class Order implements RestaurantSubject{
         Food food = new Food(foodItemId, restaurantId);
         restaurantIdToRestaurantMapper.put(restaurantId, restaurant);
         foodIdToFoodMapper.put(foodItemId, food);
+        restaurant.setAvailableFood(foodItemId);
         restaurantAndFoodMapper.computeIfAbsent(restaurantId, k -> new HashSet<>()).add(foodItemId);
         this.orderId = orderId;
         addObserver(restaurant);

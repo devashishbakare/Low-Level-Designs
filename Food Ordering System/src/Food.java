@@ -21,7 +21,8 @@ public class Food implements RestaurantObserver{
 
     public void calculateRating(){
         rating = (double)totalRating/noOfRatingCount;
-        System.out.println("Food Rating: "  + rating);
+        rating = (double)((int)((rating+0.05)*10))/10.0;
+        //System.out.println("Food Rating: "  + rating+ " No Of " + noOfRatingCount + " " + totalRating);
     }
 
     @Override
