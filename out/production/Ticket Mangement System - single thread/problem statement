@@ -1,0 +1,219 @@
+public class Agent {
+    public String agentId;
+    public Set<Integer> expertise;
+    public List<Issue> workingIssueList;
+    public List<Issue> history;
+
+    public Agent(String agentId, List<Integer> expertise){
+        this.agentId = agentId;
+        this.expertise = new HashSet<>();
+        workingIssueList = new ArrayList<>();
+        history = new ArrayList<>();
+        for(int expertiseIssueTypeIndex : expertise){
+            this.expertise.add(expertiseIssueTypeIndex);
+        }
+    }
+
+}
+
+public class Issue {
+    public String issueId;
+    public int issueType;
+    private String orderId;
+    private String description;
+    public TicketStatus ticketStatus;
+    private String agentId;
+
+    public Issue(String issueId, int issueType, String orderId, String description) {
+        this.issueId = issueId;
+        this.issueType = issueType;
+        this.orderId = orderId;
+        this.description = description;
+    }
+
+    public TicketStatus getTicketStatus() {
+        return ticketStatus;
+    }
+
+    public void setTicketStatus(TicketStatus ticketStatus) {
+        this.ticketStatus = ticketStatus;
+    }
+
+    public String getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
+    }
+}
+
+public interface AssignStrategy {
+    String getAgent(List<Agent>agents, Issue issue);
+}
+
+import java.util.List;
+
+public class assignStrategy0 implements AssignStrategy{
+    @Override
+    public String getAgent(List<Agent> agents, Issue issue) {
+        int minOpenCount = Integer.MAX_VALUE;
+        Agent storeAgent = null;
+        for(Agent agent : agents){
+            if(agent.expertise.contains(issue.issueType)){
+                if(agent.workingIssueList.size() < minOpenCount){
+                    minOpenCount = agent.workingIssueList.size();
+                    storeAgent = agent;
+                }
+            }
+        }
+        if(storeAgent == null){
+            return "agent with expertise doesn't exist";
+        }
+        storeAgent.workingIssueList.add(issue);
+        issue.setAgentId(storeAgent.agentId);
+        return storeAgent.agentId;
+    }
+}
+
+
+import java.util.List;
+
+public class assignStrategy1 implements AssignStrategy{
+
+    @Override
+    public String getAgent(List<Agent> agents, Issue issue) {
+        int maxResolvedCount = -1;
+        Agent storeAgent = null;
+        boolean resolvedIssueHistoryExist = false;
+        for(Agent agent : agents){
+            if(agent.expertise.contains(issue.issueType)){
+                List<Issue> agentResolvedHistory = agent.history;
+                int countResolvedWithIssueType = 0;
+
+                for(Issue resolvedIssue : agentResolvedHistory){
+                    if(resolvedIssue.issueType == issue.issueType){
+                        countResolvedWithIssueType++;
+                    }
+                }
+                if(maxResolvedCount < countResolvedWithIssueType){
+                    maxResolvedCount = countResolvedWithIssueType;
+                    storeAgent = agent;
+                }
+            }
+        }
+        if(storeAgent == null){
+            return "agent with expertise doesn't exist";
+        }
+        storeAgent.workingIssueList.add(issue);
+        issue.setAgentId(storeAgent.agentId);
+        return storeAgent.agentId;
+    }
+}
+
+import java.util.List;
+
+public class assignStrategy2 implements AssignStrategy{
+    @Override
+    public String getAgent(List<Agent> agents, Issue issue) {
+        int minOpenWorkingIssueCount = Integer.MAX_VALUE;
+        Agent storeAgent = null;
+        for(Agent agent : agents){
+            if(agent.expertise.contains(issue.issueType)){
+
+                List<Issue> agentOpenIssue = agent.workingIssueList;
+                int count = 0;
+                for(Issue workingIssue : agentOpenIssue){
+                    if(workingIssue.issueType == issue.issueType){
+                        count++;
+                    }
+                }
+                if(count < minOpenWorkingIssueCount){
+                    minOpenWorkingIssueCount = count;
+                    storeAgent = agent;
+                }
+            }
+        }
+
+        if(storeAgent == null) return "agent with expertise doesn't exist";
+
+        storeAgent.workingIssueList.add(issue);
+        issue.setAgentId(storeAgent.agentId);
+
+        return storeAgent.agentId;
+
+    }
+}
+import java.util.*;
+public class TicketManagementSystem {
+    private Map<String, Issue> issueIdToIssueMapper;
+    private Map<String, Agent> agentIdToAgentMapper;
+
+    private List<String> issueTypes;
+
+    public TicketManagementSystem(){
+        issueIdToIssueMapper = new HashMap<>();
+        agentIdToAgentMapper = new HashMap<>();
+        issueTypes = new ArrayList<>();
+    }
+
+    public void init(List<String> issueTypes){
+        this.issueTypes = issueTypes;
+    }
+
+
+    public String addAgent(String agentId, List<Integer> expertise){
+        if(agentIdToAgentMapper.containsKey(agentId)) return "agent already exists";
+        Agent agent = new Agent(agentId, expertise);
+        agentIdToAgentMapper.put(agentId, agent);
+        return "success";
+    }
+
+    public String createIssue(String issueId, String orderId, int issueType, String description){
+        if(issueIdToIssueMapper.containsKey(issueId)) return "issue already exist";
+        if(issueType >= issueTypes.size()) return "invalid issue type";
+        Issue issue = new Issue(issueId, issueType, orderId, description);
+        issueIdToIssueMapper.put(issueId, issue);
+        issue.setTicketStatus(TicketStatus.OPEN);
+        return "issue created";
+    }
+    public String assignIssue(String issueId, int assignStrategy){
+
+        List<Agent> agents = new ArrayList<>();
+        Issue issue = issueIdToIssueMapper.get(issueId);
+        for(String agentId : agentIdToAgentMapper.keySet()){
+            agents.add(agentIdToAgentMapper.get(agentId));
+        }
+
+        if(assignStrategy == 0){
+            AssignStrategy assignStrategy0 = new assignStrategy0();
+            return assignStrategy0.getAgent(agents, issue);
+        }else if(assignStrategy == 1){
+            System.out.println("reach in parent strategy");
+            AssignStrategy assignStrategy1 = new assignStrategy1();
+            return assignStrategy1.getAgent(agents, issue);
+        }else{
+            AssignStrategy assignStrategy2 = new assignStrategy2();
+            return assignStrategy2.getAgent(agents, issue);
+        }
+
+    }
+
+    public void resolveIssue(String issueId, String resolution){
+        Issue issue = issueIdToIssueMapper.get(issueId);
+        issue.setTicketStatus(TicketStatus.RESOLVED);
+        Agent agent = agentIdToAgentMapper.get(issue.getAgentId());
+        agent.workingIssueList.remove(issue);
+        agent.history.add(issue);
+    }
+
+    public List<String> getAgentHistory(String agentId){
+        Agent agent = agentIdToAgentMapper.get(agentId);
+        List<String> resolvedIssue = new ArrayList<>();
+        for(Issue issue : agent.history){
+            resolvedIssue.add(issue.issueId);
+        }
+        return resolvedIssue;
+    }
+}
+
