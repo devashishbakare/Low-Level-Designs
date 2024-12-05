@@ -4,9 +4,9 @@ public class Order {
     public String sellerId;
     public int productId;
     public int productCount;
-    Enum paymentMode;
+    public String paymentMode;
 
-    public Order(String orderId, String destinationPincode, String sellerId, int productId, int productCount, Enum paymentMode) {
+    public Order(String orderId, String destinationPincode, String sellerId, int productId, int productCount, String paymentMode) {
         this.orderId = orderId;
         this.destinationPincode = destinationPincode;
         this.sellerId = sellerId;
