@@ -1,0 +1,109 @@
+- update map in single thread
+
+    HashMap<String, Integer> productIdToQuantity;
+    productIdToQuantity.put(productId, productIdToQuantity.getOrDefault(productId, 0) + delta);
+
+- update map in multiple thread environment if we use AtomicInteger
+
+    ConcurrentHashMap<Integer, AtomicInteger>> productToQuantity;
+    productToQuantity.put(productId, new AtomicInteger(0));
+    productToQuantity.get(productId).addAndGet(delta);
+
+    update in AtomicInteger
+
+    .addAndGet(5) //add value by 5
+    .addAndGet(-5) //subtract value by 5
+
+    fetch AtomicInteger value from map
+    productToQuantity.get(productId).get();
+
+- Why you need to use final keyword when we do
+    - final ConcurrentHashMap<String, String> vehicleToSpotMap;
+    - you might have initialize this map in object or any other part of it
+    - you are allowed to do update, fetch but not allowed to re-initialized/reassigned
+    example :
+     import java.util.concurrent.ConcurrentHashMap;
+
+     public class FinalExample {
+         private final ConcurrentHashMap<String, Integer> productMap = new ConcurrentHashMap<>();
+
+         public void addProduct(String productId, int quantity) {
+             productMap.put(productId, quantity); // Allowed: Modifying map contents
+         }
+
+         public void replaceMap() {
+             // productMap = new ConcurrentHashMap<>(); // Compilation error: Cannot reassign final variable
+         }
+
+         public int getProductQuantity(String productId) {
+             return productMap.getOrDefault(productId, 0);
+         }
+     }
+
+     Benefits :
+     - Prevent Accidental Reassignment
+     - If an object/map is declared as final, it ensures that other threads see its correctly constructed state when they access it.
+
+
+
+    -when to use synchronized block, synchronized method??
+
+     synchronized method : when you want entired method allowed for one thread
+     example :
+     public synchronized void addInventory(String productId, int quantity) {
+         inventory.put(productId, inventory.getOrDefault(productId, 0) + quantity);
+     }
+
+     synchronized block : only a block of code you want single thread to update
+     Other threads can access non-critical parts of the method without waiting for the lock.
+     example :
+     public int getInventory(String productId) {
+         synchronized (this) {
+             return inventory.getOrDefault(productId, 0);
+         }
+     }
+
+     ReentrantLock
+     import java.util.concurrent.locks.Lock;
+     import java.util.concurrent.locks.ReentrantLock;
+     private final Lock lock = new ReentrantLock();
+      public void addInventory(String productId, int quantity) {
+         lock.lock();
+         try {
+             inventory.put(productId, inventory.getOrDefault(productId, 0) + quantity);
+         } finally {
+             lock.unlock();
+         }
+     }
+
+   Main Method with thread
+   1) create thread and do the operation
+        Thread thread1 = new Thread(() -> {
+            //operation here
+        });
+         thread1.start(); //start the tread
+         try {
+             thread1.join(); //wait for thread to complete
+         } catch (InterruptedException e) {
+             e.printStackTrace();
+         }
+
+   2) use the executorService
+    import java.util.concurrent.ExecutorService;
+    import java.util.concurrent.Executors;
+    // create thread pool
+    ExecutorService executorService = Executors.newFixedThreadPool(4);
+    executorService.submit(() -> {
+        //operation here
+    });
+     executorService.shutdown();
+
+
+  Other Data structure we can use
+
+  Set<String> syncHashSet = Collections.synchronizedSet(new HashSet<>());
+  List<String> syncList = Collections.synchronizedList(new ArrayList<>());
+
+  Use StringBuffer (thread-safe) instead of stringBuilder.
+  StringBuffer sb = new StringBuffer("Hello");
+  sb.append(" World!");

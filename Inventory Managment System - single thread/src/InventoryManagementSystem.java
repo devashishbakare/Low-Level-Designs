@@ -25,10 +25,8 @@ public class InventoryManagementSystem {
 
     public int getInventory(int productId, String sellerId){
         if(!sellerIdToSellerMapper.containsKey(sellerId)  || !productIdToProductMapper.containsKey(productId)) return 0;
-
         Inventory inventory = Inventory.createInventory();
         if(inventory.sellerToProductToDeltaMapper.get(sellerId).containsKey(productId) == false) return 0;
-
         Map<Integer, Integer> productToDeltaMapper = inventory.sellerToProductToDeltaMapper.get(sellerId);
         return productToDeltaMapper.get(productId);
     }
