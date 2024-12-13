@@ -1,0 +1,12 @@
+Here we are using Strategy and Singleton design pattern
+
+1) why strategy?
+- you could see for make one move from cell A to cell B there are lot of options, user choose at run time which one he should go
+
+2) singleton
+- Everyone should update same board;
+
+Some thing you need to know there
+1) Everytime you write some code, look for some base cases and edge cases
+2) Creating separate class for each and every type is important
+3) This is nothing but "can you reach from one cell to another cell"
